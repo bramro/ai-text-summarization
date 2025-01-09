@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Spinner } from '@/components/expansions/spinner';
 import { extractTextFromPDF } from '@/lib/pdfUtils';
 import ModelLoaderWorker from '@/lib/modelLoader.worker?worker'
@@ -46,8 +46,13 @@ function FileSummary(props: Props) {
   useEffect(() => {
     const fetchSummary = async () => {
       const extractedText = await extractTextFromPDF(props.file);
+
+      
+      console.log(extractedText);
+
+
       if (worker.current && extractedText[0]) {
-        worker.current.postMessage({ model, text: extractedText[0] });
+        worker.current.postMessage({ model, text: extractedText.join(" ") });
       }
     };
 
@@ -58,6 +63,11 @@ function FileSummary(props: Props) {
     <Card>
       <CardHeader>
         <CardTitle className="text-left">Summary</CardTitle>
+        {props.file && 
+          <CardDescription className="text-xs text-gray-500">
+            {props.file.name} - {props.file.size ? `${(props.file.size / 1024).toFixed(2)} KB` : ""}
+          </CardDescription>
+        }
       </CardHeader>
       <CardContent>
         {isSummarizerLoading &&
@@ -70,9 +80,9 @@ function FileSummary(props: Props) {
         {isSummarizing &&
           <Spinner size="small">
             <span className="text-xs text-gray-500 text-center">
-              Reading... <br />
-              This may take a minute, as the model is running in your browser. <br />
-              To speed it up, only the first page of the PDF is read.
+              Reading...
+              <br /><br />
+              This may take a minute, as the model is running in your browser.
             </span>
           </Spinner>
         }

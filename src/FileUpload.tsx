@@ -67,11 +67,13 @@ function FileUpload(props: Props) {
               </Button>
             </label>
           </div>
-          {uploadProgress > 0 && uploadProgress < 100 && <Progress value={uploadProgress} />}
         </div>
         <div className="text-xs text-gray-500">
           Or use an example PDF about <a className="font-bold" href="paris.pdf" onClick={handleLinkClick}>Paris</a> (<a href="paris.pdf" target="_blank">view</a>) or <a className="font-bold" href="dinosaurs.pdf" onClick={handleLinkClick}>dinosaurs</a> (<a href="dinosaurs.pdf" target="_blank">view</a>).
         </div>
+        {uploadProgress > 0 && uploadProgress < 100 &&
+          <Progress value={uploadProgress} />
+        }
       </CardContent>
     </Card>
   );
