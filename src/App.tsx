@@ -11,7 +11,7 @@ function App() {
     <div className="flex flex-col min-h-screen bg-gray-200">
       <Navbar />
       <div className="flex justify-center items-start flex-grow">
-        <div className="min-w-96 max-w-xl space-y-4 mt-10">
+        <div className="min-w-96 max-w-xl space-y-4 mt-10 mb-10">
           <FileUpload onUploadComplete={setUploadedFile} />
           <FileSummary file={uploadedFile} />
         </div>
