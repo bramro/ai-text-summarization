@@ -2,34 +2,52 @@ import { useState, useEffect, useRef } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Spinner } from '@/components/expansions/spinner';
 import { extractTextFromPDF } from '@/lib/pdfUtils';
-import { env, pipeline, SummarizationPipeline } from '@Xenova/transformers';
-
-env.allowLocalModels = false;
-env.useBrowserCache = true;
+import ModelLoaderWorker from '@/lib/modelLoader.worker?worker'
 
 interface Props {
   file: File | null;
 }
 
 function FileSummary(props: Props) {
-  const [isSummarizerLoaded, setIsSummarizerLoaded] = useState(false);
+  const [isSummarizerLoading, setIsSummarizerLoading] = useState(true);
+  const [isSummarizing, setIsSummarizing] = useState(false);
   const [summary, setSummary] = useState<string>("");
-  const summarizer = useRef<SummarizationPipeline | null>(null);
+  const worker = useRef<Worker | null>(null);
   const model = "Xenova/distilbart-cnn-6-6";
 
   useEffect(() => {
-    const init = async () => {
-      if (summarizer.current) return;
-      summarizer.current = await pipeline('summarization', model);
-      setIsSummarizerLoaded(true);
+    worker.current = new ModelLoaderWorker();
+    worker.current.onmessage = (event: MessageEvent<{ status: string, summary?: string, error?: any }>) => {
+      if (event.data.status === 'loaded') {
+        setIsSummarizerLoading(false);
+      }
+      if (event.data.status === 'summarizing') {
+        setIsSummarizing(true);
+      }
+      if (event.data.status === 'summarized') {
+        setIsSummarizing(false);
+        setSummary(event.data.summary || "");
+      }
+      if (event.data.status === 'error') {
+        setIsSummarizerLoading(false);
+        setSummary(event.data.error || "Error initializing worker");
+      }
     };
-    init();
+    worker.current.postMessage({ model });
+
+    return () => {
+      if (worker.current) {
+        worker.current.terminate();
+      }
+    };
   }, []);
 
   useEffect(() => {
     const fetchSummary = async () => {
       const extractedText = await extractTextFromPDF(props.file);
-      setSummary(extractedText);
+      if (worker.current && extractedText[0]) {
+        worker.current.postMessage({ model, text: extractedText[0] });
+      }
     };
 
     fetchSummary();
@@ -41,10 +59,23 @@ function FileSummary(props: Props) {
         <CardTitle className="text-left">Summary</CardTitle>
       </CardHeader>
       <CardContent>
-        {!isSummarizerLoaded &&
-          <Spinner size="medium">Loading {model}...</Spinner>
+        {isSummarizerLoading &&
+          <Spinner size="small">
+            <span className="text-xs text-gray-500">
+              Loading {model}...
+            </span>
+          </Spinner>
         }
-        {isSummarizerLoaded && summary &&
+        {isSummarizing &&
+          <Spinner size="small">
+            <span className="text-xs text-gray-500 text-center">
+              Reading... <br />
+              This may take a minute, as the model is running in your browser. <br />
+              To speed it up, only the first page of the PDF is read.
+            </span>
+          </Spinner>
+        }
+        {summary &&
           <pre className="p-4 bg-gray-100 rounded-md overflow-auto">
             <code className="whitespace-pre-wrap break-words">{summary}</code>
           </pre>

@@ -7,27 +7,27 @@ pdfjsLib.GlobalWorkerOptions.workerPort = new pdfjsWorker();
 // import workerSrc from 'pdfjs-dist/build/pdf.worker?worker&url'
 // pdfjsLib.GlobalWorkerOptions.workerSrc = workerSrc
 
-export const extractTextFromPDF = async (file: File | null): Promise<string> => {
+export const extractTextFromPDF = async (file: File | null): Promise<string[]> => {
   if (!file) {
-    return "";
+    return [];
   }
   try {
     const fileArrayBuffer = await file.arrayBuffer();
 
     const pdf = await pdfjsLib.getDocument(fileArrayBuffer).promise;
-    let fullText = "";
+    let fullText = [];
     for (let pageNumber = 1; pageNumber <= pdf.numPages; pageNumber++) {
-      const page = await pdf.getPage(pageNumber);
+      const page = await pdf.getPage(1);
       const textContent = await page.getTextContent();
       const pageText = textContent.items
         .filter(item => 'str' in item)
         .map(item => (item as TextItem).str)
         .join(' ');
-      fullText += pageText;
+      fullText.push(pageText);
     }
     return fullText;
   } catch (error) {
     console.error("Error parsing PDF:", error);
-    return "Error parsing PDF";
+    return ["Error parsing PDF"];
   }
 };
