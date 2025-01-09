@@ -2,15 +2,19 @@ import { useState } from 'react';
 import './app.css';
 import FileSummary from './FileSummary';
 import FileUpload from './FileUpload';
+import Navbar from './Navbar';
 
 function App() {
   const [uploadedFile, setUploadedFile] = useState<File | null>(null);
-  
+
   return (
-    <div className="flex justify-center items-start min-h-screen bg-gray-200">
-      <div className="min-w-96 max-w-xl space-y-4 mt-20">
-        <FileUpload onUploadComplete={setUploadedFile} />
-        <FileSummary file={uploadedFile} />
+    <div className="flex flex-col min-h-screen bg-gray-200">
+      <Navbar />
+      <div className="flex justify-center items-start flex-grow">
+        <div className="min-w-96 max-w-xl space-y-4 mt-10">
+          <FileUpload onUploadComplete={setUploadedFile} />
+          <FileSummary file={uploadedFile} />
+        </div>
       </div>
     </div>
   );

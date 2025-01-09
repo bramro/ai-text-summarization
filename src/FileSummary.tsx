@@ -46,11 +46,6 @@ function FileSummary(props: Props) {
   useEffect(() => {
     const fetchSummary = async () => {
       const extractedText = await extractTextFromPDF(props.file);
-
-      
-      console.log(extractedText);
-
-
       if (worker.current && extractedText[0]) {
         worker.current.postMessage({ model, text: extractedText.join(" ") });
       }
@@ -60,39 +55,41 @@ function FileSummary(props: Props) {
   }, [props.file]);
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle className="text-left">Summary</CardTitle>
-        {props.file && 
-          <CardDescription className="text-xs text-gray-500">
-            {props.file.name} - {props.file.size ? `${(props.file.size / 1024).toFixed(2)} KB` : ""}
-          </CardDescription>
-        }
-      </CardHeader>
-      <CardContent>
-        {isSummarizerLoading &&
-          <Spinner size="small">
-            <span className="text-xs text-gray-500">
-              Loading {model}...
-            </span>
-          </Spinner>
-        }
-        {isSummarizing &&
-          <Spinner size="small">
-            <span className="text-xs text-gray-500 text-center">
-              Reading...
-              <br /><br />
-              This may take a minute, as the model is running in your browser.
-            </span>
-          </Spinner>
-        }
-        {summary &&
-          <pre className="p-4 bg-gray-100 rounded-md overflow-auto">
-            <code className="whitespace-pre-wrap break-words">{summary}</code>
-          </pre>
-        }
-      </CardContent>
-    </Card>
+    <>
+      {props.file &&
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-left">Summary</CardTitle>
+            <CardDescription className="text-xs text-gray-500">
+              {props.file.name} - {props.file.size ? `${(props.file.size / 1024).toFixed(2)} KB` : ""}
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            {isSummarizerLoading &&
+              <Spinner size="small">
+                <span className="text-xs text-gray-500">
+                  Loading {model}...
+                </span>
+              </Spinner>
+            }
+            {isSummarizing &&
+              <Spinner size="small">
+                <span className="text-xs text-gray-500 text-center">
+                  Reading...
+                  <br /><br />
+                  This may take a minute, as the model is running in your browser.
+                </span>
+              </Spinner>
+            }
+            {summary &&
+              <pre className="p-4 bg-gray-100 rounded-md overflow-auto">
+                <code className="whitespace-pre-wrap break-words">{summary}</code>
+              </pre>
+            }
+          </CardContent>
+        </Card>
+      }
+    </>
   );
 }
 
