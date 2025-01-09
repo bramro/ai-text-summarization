@@ -83,7 +83,7 @@ function FileSummary(props: Props) {
             }
             {summary &&
               <pre className="p-4 bg-gray-100 rounded-md overflow-auto">
-                <code className="whitespace-pre-wrap break-words">{summary}</code>
+                <code className="whitespace-pre-wrap break-words text-sm">{summary}</code>
               </pre>
             }
           </CardContent>
