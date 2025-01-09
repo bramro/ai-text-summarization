@@ -20,16 +20,12 @@ onmessage = async (event: MessageEvent<{ model: string, text?: string }>) => {
 
     if (event.data.text) {
 
-      console.info(new Date() + " going to summarize");
-
       postMessage({ status: 'summarizing' });
 
       const result: any = await summarizer(event.data.text, {
         min_length: 50,
         max_length: 100,
       });
-
-      console.info(new Date() + "done with summarize");
 
       postMessage({ status: 'summarized', summary: result[0].summary_text?.trim() });
     } else {

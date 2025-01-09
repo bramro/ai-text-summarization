@@ -23,6 +23,7 @@ function FileSummary(props: Props) {
       }
       if (event.data.status === 'summarizing') {
         setIsSummarizing(true);
+        setSummary("");
       }
       if (event.data.status === 'summarized') {
         setIsSummarizing(false);
