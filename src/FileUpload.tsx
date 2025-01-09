@@ -55,7 +55,7 @@ function FileUpload(props: Props) {
     <Card>
       <CardHeader>
         <CardTitle className="text-left">Select PDF</CardTitle>
-        <CardDescription className="text-xs text-gray-500">Files wil not be sent to the server. Extrating the text and making the summary is done in your browser.</CardDescription>
+        <CardDescription className="text-xs text-gray-500">Files wil not be sent to the server. Extracting the text and making the summary is done in your browser.</CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
         <div className="flex flex-col gap-2">
