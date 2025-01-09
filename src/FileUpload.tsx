@@ -27,7 +27,7 @@ function FileUpload(props: Props) {
           props.onUploadComplete(file);
           clearInterval(interval);
         }
-      }, 150) // Adjust this number to change the delay
+      }, 50) // Adjust this number to change the delay
 
     } else {
       setUploadProgress(0);
@@ -50,6 +50,9 @@ function FileUpload(props: Props) {
             </label>
           </div>
           {uploadProgress > 0 && uploadProgress < 100 && <Progress value={uploadProgress} />}
+        </div>
+        <div className="text-xs text-gray-500">
+          Or download an example PDF about <a href="paris.pdf">Paris</a> or <a href="dinosaurs.pdf">dinosaurs</a> first.
         </div>
       </CardContent>
     </Card>
