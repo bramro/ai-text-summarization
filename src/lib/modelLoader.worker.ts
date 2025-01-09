@@ -32,12 +32,16 @@ onmessage = async (event: MessageEvent<{ model: string, text?: string }>) => {
 
     if (event.data.text) {
 
+      const startTime = performance.now();
       postMessage({ status: 'summarizing' });
 
       const result: any = await summarizer(event.data.text, {
-        min_length: 50,
-        max_length: 100,
+        min_length: 70,
+        max_length: 150,
       });
+
+      const endTime = performance.now();
+      console.log(`Summarization took ${endTime - startTime} milliseconds`);
 
       postMessage({ status: 'summarized', summary: result[0].summary_text?.trim() });
     } else {
