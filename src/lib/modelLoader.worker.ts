@@ -3,13 +3,25 @@ import { env, pipeline, SummarizationPipeline } from '@Xenova/transformers';
 env.allowLocalModels = false;
 env.useBrowserCache = true;
 
+interface Progress {
+  name: string,       // Xenova/distilbart-cnn-6-6
+  file: string,       // onnx/decoder_model_merged_quantized.onnx
+  loaded: number,     // bytes
+  progress: number,   // %
+  total: number,      // bytes
+}
+
 let summarizer: SummarizationPipeline | null = null;
 
 const init = async (model: string) => {
   if (summarizer) {
     return summarizer;
   }
-  summarizer = await pipeline('summarization', model);
+  summarizer = await pipeline('summarization', model, {
+    progress_callback: (progress: Progress) => {
+      console.log("Model loading:", progress);
+    }
+  });
   return summarizer;
 };
 
