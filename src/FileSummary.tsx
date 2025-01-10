@@ -3,7 +3,6 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Spinner } from '@/components/expansions/spinner';
 import { extractTextFromPDF } from '@/lib/pdfUtils';
 import { useToast } from "@/components/hooks/use-toast"
-import { ToastAction } from "@/components/ui/toast"
 import ModelLoaderWorker from '@/lib/modelLoader.worker?worker'
 
 interface Props {
