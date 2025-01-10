@@ -11,7 +11,9 @@ function Navbar() {
           <span className="text-xs">Demo app made with React, Shadcn/ui and Hugging Face Transformers.js</span>
         </div>
 
-        <a href="https://github.com/bramro" target="_blank" rel="noopener noreferrer"><FaGithub className="h-8 w-8 text-white" /></a>
+        <a href="https://github.com/bramro/ai-text-summarization" target="_blank" rel="noopener noreferrer">
+          <FaGithub className="h-8 w-8 text-white" />
+        </a>
 
       </div>
     </div>

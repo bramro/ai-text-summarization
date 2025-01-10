@@ -6,7 +6,6 @@ Demo React/Tailwind app with AI text-summarization capabilities. This applicatio
 
 - Text summarization using a small DistilBART model
 - Text extraction from PFD using pdfjs
-- Real-time audio recording and transcription 
 - Modern UI built with Tailwind CSS and Shadcn/ui
 - Fully client-side processing - no server required
 
