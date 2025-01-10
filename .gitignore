@@ -23,4 +23,12 @@ dist-ssr
 *.sln
 *.sw?
 
+# misc
+.DS_Store
+.env.local
+.env.development
+.env.test
+.env.production
+.env
+
 *.code-workspace
