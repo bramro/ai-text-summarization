@@ -2,6 +2,8 @@ import { useState, useEffect, useRef } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Spinner } from '@/components/expansions/spinner';
 import { extractTextFromPDF } from '@/lib/pdfUtils';
+import { useToast } from "@/components/hooks/use-toast"
+import { ToastAction } from "@/components/ui/toast"
 import ModelLoaderWorker from '@/lib/modelLoader.worker?worker'
 
 interface Props {
@@ -9,9 +11,13 @@ interface Props {
 }
 
 function FileSummary(props: Props) {
+
+  const { toast } = useToast();
+
   const [isSummarizerLoading, setIsSummarizerLoading] = useState(true);
   const [isSummarizing, setIsSummarizing] = useState(false);
   const [summary, setSummary] = useState<string>("");
+  
   const worker = useRef<Worker | null>(null);
   const model = "Xenova/distilbart-cnn-6-6";
 
@@ -28,6 +34,11 @@ function FileSummary(props: Props) {
       if (event.data.status === 'summarized') {
         setIsSummarizing(false);
         setSummary(event.data.summary || "");
+
+        toast({
+          title: "Done",
+          description: "Happy reading!",
+        })
       }
       if (event.data.status === 'error') {
         setIsSummarizerLoading(false);
